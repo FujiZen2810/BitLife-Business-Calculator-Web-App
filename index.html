@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BitLife Business Calculator - Professional Production Forecasting & Inventory Management">
+    <meta name="keywords" content="business calculator, production forecast, inventory management, BitLife">
+    <meta name="author" content="Fuji">
+    <meta property="og:title" content="BitLife Business Calculator">
+    <meta property="og:description" content="Professional Production Forecasting Tool">
+    <meta property="og:image" content="https://your-domain.com/preview.png">
+    <meta property="og:url" content="https://your-domain.com">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>BitLife Business Calculator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💼</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💼</text></svg>">
+
+    <style>
+        /* Add these keyframe animations */
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(80vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Add focus animation class for inputs */
+        .focus-animation {
+            animation: inputPulse 1s ease;
+        }
+        
+        @keyframes inputPulse {
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 0 0 rgba(212, 175, 55, 0);
+            }
+            50% { 
+                transform: scale(1.01); 
+                box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen bitlife-bg">
+    <!-- Decorative header bar -->
+    <div class="bitlife-header"></div>
+    
+    <div class="container mx-auto px-4 py-6">
+        <!-- Title section -->
+        <div class="text-center mb-8 fade-in">
+            <h1 class="bitlife-title">
+                <i class="fas fa-briefcase mr-2"></i>BitLife Business Calculator
+            </h1>
+            <p class="bitlife-subtitle">
+                Professional Production Forecasting & Inventory Management
+            </p>
+        </div>
+        
+        <!-- Main content area -->
+        <div class="flex flex-col lg:flex-row gap-4 mb-6">
+            <!-- Method 1: Percentage-Based -->
+            <div class="flex-1 section-card fade-in">
+                <div class="mb-4">
+                    <h2 class="section-title text-lg">
+                        <i class="fas fa-chart-line mr-2"></i>Method 1: Percentage-Based
+                    </h2>
+                    <div class="section-underline"></div>
+                </div>
+                
+                <!-- Input fields -->
+                <div class="space-y-3">
+                    <!-- Last Year Production -->
+                    <div class="input-group">
+                        <label class="input-label text-sm">
+                            <i class="fas fa-industry mr-1"></i>Last Year Production:
+                        </label>
+                        <input 
+                            type="text" 
+                            id="production-last-year" 
+                            class="input-field p-2 text-sm"
+                            placeholder="Enter units"
+                            data-method="1"
+                        >
+                    </div>
+                    
+                    <!-- Last Year Sales -->
+                    <div class="input-group">
+                        <label class="input-label text-sm">
+                            <i class="fas fa-shopping-cart mr-1"></i>Last Year Sales:
+                        </label>
+                        <input 
+                            type="text" 
+                            id="sales" 
+                            class="input-field p-2 text-sm"
+                            placeholder="Enter units"
+                            data-method="1"
+                        >
+                    </div>
+                    
+                    <!-- Forecast Percentage -->
+                    <div class="input-group">
+                        <label class="input-label text-sm">
+                            <i class="fas fa-chart-bar mr-1"></i>Forecast Percentage (%):
+                        </label>
+                        <input 
+                            type="text" 
+                            id="forecast" 
+                            class="input-field p-2 text-sm"
+                            placeholder="Enter percentage"
+                            data-method="1"
+                        >
+                    </div>
+                    
+                    <!-- Current Inventory -->
+                    <div class="input-group">
+                        <label class="input-label text-sm">
+                            <i class="fas fa-boxes mr-1"></i>Current Inventory:
+                        </label>
+                        <input 
+                            type="text" 
+                            id="inventory" 
+                            class="input-field p-2 text-sm"
+                            placeholder="Enter units"
+                            data-method="1"
+                        >
+                    </div>
+                    
+                    <!-- Minimum Production Buffer -->
+                    <div class="input-group">
+                        <label class="input-label text-sm">
+                            <i class="fas fa-shield-alt mr-1"></i>Min Production Buffer (%):
+                        </label>
+                        <input 
+                            type="text" 
+                            id="min-buffer" 
+                            class="input-field p-2 text-sm"
+                            placeholder="0"
+                            value="0"
+                            data-method="1"
+                        >
+                        <p class="helper-text text-xs">(Leave at 0 for no minimum)</p>
+                    </div>
+                </div>
+                
+                <!-- Separator -->
+                <div class="separator my-4"></div>
+                
+                <!-- Results -->
+                <div class="space-y-4">
+                    <!-- Forecast Demand -->
+                    <div class="result-row">
+                        <div class="result-label text-sm">
+                            <i class="fas fa-chart-line mr-1"></i>Forecast Demand:
+                        </div>
+                        <div class="result-value">
+                            <span id="demand-value" class="demand-value text-xl no-select">0</span>
+                            <span class="unit-label text-xs">units</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Required Production -->
+                    <div class="result-row">
+                        <div class="result-label text-sm">
+                            <i class="fas fa-industry mr-1"></i>Required Production:
+                        </div>
+                        <div class="result-value">
+                            <span id="production-value" class="production-value text-xl no-select">0</span>
+                            <span class="unit-label text-xs">units</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Status Message -->
+                    <div id="status-message" class="status-message text-xs min-h-4"></div>
+                    
+                    <!-- Reset Button -->
+                    <div class="flex justify-end pt-2">
+                        <button 
+                            id="reset-method1" 
+                            class="btn-bitlife py-2 px-3 text-sm"
+                        >
+                            <i class="fas fa-redo mr-1"></i>Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Method 2: Analyst Forecast -->
+            <div class="flex-1 section-card fade-in">
+                <div class="mb-4">
+                    <h2 class="section-title text-lg">
+                        <i class="fas fa-plus-circle mr-2"></i>Method 2: Analyst Forecast
+                    </h2>
+                    <div class="section-underline"></div>
+                </div>
+                
+                <!-- Input fields -->
+                <div class="space-y-3">
+                    <!-- Last Year Production -->
+                    <div class="input-group">
+                        <label class="input-label text-sm">
+                            <i class="fas fa-industry mr-1"></i>Last Year Production:
+                        </label>
+                        <input 
+                            type="text" 
+                            id="production-analyst-last-year" 
+                            class="input-field p-2 text-sm"
+                            placeholder="Enter units"
+                            data-method="2"
+                        >
+                    </div>
+                    
+                    <!-- Last Year Sales -->
+                    <div class="input-group">
+                        <label class="input-label text-sm">
+                            <i class="fas fa-shopping-cart mr-1"></i>Last Year Sales:
+                        </label>
+                        <input 
+                            type="text" 
+                            id="sales-analyst" 
+                            class="input-field p-2 text-sm"
+                            placeholder="Enter units"
+                            data-method="2"
+                        >
+                    </div>
+                    
+                    <!-- Additional Forecast -->
+                    <div class="input-group">
+                        <label class="input-label text-sm">
+                            <i class="fas fa-lightbulb mr-1"></i>Additional Forecast:
+                        </label>
+                        <input 
+                            type="text" 
+                            id="analyst-forecast" 
+                            class="input-field p-2 text-sm"
+                            placeholder="Enter units"
+                            data-method="2"
+                        >
+                    </div>
+                    
+                    <!-- Current Inventory -->
+                    <div class="input-group">
+                        <label class="input-label text-sm">
+                            <i class="fas fa-boxes mr-1"></i>Current Inventory:
+                        </label>
+                        <input 
+                            type="text" 
+                            id="inventory-analyst" 
+                            class="input-field p-2 text-sm"
+                            placeholder="Enter units"
+                            data-method="2"
+                        >
+                    </div>
+                    
+                    <!-- Minimum Production Buffer -->
+                    <div class="input-group">
+                        <label class="input-label text-sm">
+                            <i class="fas fa-shield-alt mr-1"></i>Min Production Buffer (%):
+                        </label>
+                        <input 
+                            type="text" 
+                            id="min-buffer-analyst" 
+                            class="input-field p-2 text-sm"
+                            placeholder="0"
+                            value="0"
+                            data-method="2"
+                        >
+                        <p class="helper-text text-xs">(Leave at 0 for no minimum)</p>
+                    </div>
+                </div>
+                
+                <!-- Separator -->
+                <div class="separator my-4"></div>
+                
+                <!-- Results -->
+                <div class="space-y-4">
+                    <!-- Total Forecast Demand -->
+                    <div class="result-row">
+                        <div class="result-label text-sm">
+                            <i class="fas fa-chart-bar mr-1"></i>Total Forecast Demand:
+                        </div>
+                        <div class="result-value">
+                            <span id="total-demand-value" class="demand-value text-xl no-select">0</span>
+                            <span class="unit-label text-xs">units</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Required Production -->
+                    <div class="result-row">
+                        <div class="result-label text-sm">
+                            <i class="fas fa-industry mr-1"></i>Required Production:
+                        </div>
+                        <div class="result-value">
+                            <span id="production-analyst-value" class="production-value text-xl no-select">0</span>
+                            <span class="unit-label text-xs">units</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Status Message -->
+                    <div id="status-analyst-message" class="status-message text-xs min-h-4"></div>
+                    
+                    <!-- Reset Button -->
+                    <div class="flex justify-end pt-2">
+                        <button 
+                            id="reset-method2" 
+                            class="btn-bitlife py-2 px-3 text-sm"
+                        >
+                            <i class="fas fa-redo mr-1"></i>Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer note -->
+        <div class="footer-note">
+            <p>Enter values in any field to see real-time calculations.</p>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="index.js"></script>
+</body>
+</html>

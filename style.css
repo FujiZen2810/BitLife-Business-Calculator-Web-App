@@ -495,3 +495,19 @@ body.bitlife-bg::before {
     z-index: -1;
     pointer-events: none;
 }
+
+/* Hide number input spinners for cleaner look */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Better styling for number inputs */
+.input-field[type="number"] {
+    font-variant-numeric: tabular-nums;
+}

@@ -130,6 +130,7 @@ class CalculatorUtils {
      */
     static parseInputValue(value) {
         if (!value || value.trim() === '') return 0;
+        // Remove commas and parse as float
         const cleanValue = value.replace(/,/g, '');
         const parsed = parseFloat(cleanValue);
         return isNaN(parsed) ? 0 : parsed;
@@ -140,12 +141,20 @@ class CalculatorUtils {
      */
     static formatInput(input) {
         const method = input.getAttribute('data-method');
-        let value = input.value.replace(/,/g, '');
         
-        if (value === '-') return;
+        // For number inputs, we need to handle the value differently
+        const rawValue = input.value;
         
-        if (value && !isNaN(value) && value !== '') {
-            input.value = parseInt(value).toLocaleString('en-US');
+        // Remove any commas for calculation
+        const cleanValue = rawValue.replace(/,/g, '');
+        
+        // Only format if it's a valid number and not empty
+        if (cleanValue && !isNaN(cleanValue) && cleanValue !== '') {
+            // For display, add commas
+            const numValue = parseFloat(cleanValue);
+            if (!isNaN(numValue)) {
+                input.value = numValue.toLocaleString('en-US');
+            }
         }
         
         // Animate the input focus

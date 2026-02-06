@@ -87,10 +87,12 @@
                             <i class="fas fa-industry mr-1"></i>Last Year Production:
                         </label>
                         <input 
-                            type="text" 
+                            type="number" 
                             id="production-last-year" 
                             class="input-field p-2 text-sm"
                             placeholder="Enter units"
+                            inputmode="decimal"
+                            pattern="[0-9]*"
                             data-method="1"
                         >
                     </div>
@@ -101,10 +103,12 @@
                             <i class="fas fa-shopping-cart mr-1"></i>Last Year Sales:
                         </label>
                         <input 
-                            type="text" 
+                            type="number" 
                             id="sales" 
                             class="input-field p-2 text-sm"
                             placeholder="Enter units"
+                            inputmode="decimal"
+                            pattern="[0-9]*"
                             data-method="1"
                         >
                     </div>
@@ -115,10 +119,12 @@
                             <i class="fas fa-chart-bar mr-1"></i>Forecast Percentage (%):
                         </label>
                         <input 
-                            type="text" 
+                            type="number" 
                             id="forecast" 
                             class="input-field p-2 text-sm"
                             placeholder="Enter percentage"
+                            inputmode="decimal"
+                            pattern="[0-9]*"
                             data-method="1"
                         >
                     </div>
@@ -129,10 +135,12 @@
                             <i class="fas fa-boxes mr-1"></i>Current Inventory:
                         </label>
                         <input 
-                            type="text" 
+                            type="number" 
                             id="inventory" 
                             class="input-field p-2 text-sm"
                             placeholder="Enter units"
+                            inputmode="decimal"
+                            pattern="[0-9]*"
                             data-method="1"
                         >
                     </div>
@@ -143,11 +151,13 @@
                             <i class="fas fa-shield-alt mr-1"></i>Min Production Buffer (%):
                         </label>
                         <input 
-                            type="text" 
+                            type="number" 
                             id="min-buffer" 
                             class="input-field p-2 text-sm"
                             placeholder="0"
                             value="0"
+                            inputmode="decimal"
+                            pattern="[0-9]*"
                             data-method="1"
                         >
                         <p class="helper-text text-xs">(Leave at 0 for no minimum)</p>
@@ -213,10 +223,12 @@
                             <i class="fas fa-industry mr-1"></i>Last Year Production:
                         </label>
                         <input 
-                            type="text" 
+                            type="number" 
                             id="production-analyst-last-year" 
                             class="input-field p-2 text-sm"
                             placeholder="Enter units"
+                            inputmode="decimal"
+                            pattern="[0-9]*"
                             data-method="2"
                         >
                     </div>
@@ -227,10 +239,12 @@
                             <i class="fas fa-shopping-cart mr-1"></i>Last Year Sales:
                         </label>
                         <input 
-                            type="text" 
+                            type="number" 
                             id="sales-analyst" 
                             class="input-field p-2 text-sm"
                             placeholder="Enter units"
+                            inputmode="decimal"
+                            pattern="[0-9]*"
                             data-method="2"
                         >
                     </div>
@@ -241,10 +255,12 @@
                             <i class="fas fa-lightbulb mr-1"></i>Additional Forecast:
                         </label>
                         <input 
-                            type="text" 
+                            type="number" 
                             id="analyst-forecast" 
                             class="input-field p-2 text-sm"
                             placeholder="Enter units"
+                            inputmode="decimal"
+                            pattern="[0-9]*"
                             data-method="2"
                         >
                     </div>
@@ -255,12 +271,14 @@
                             <i class="fas fa-boxes mr-1"></i>Current Inventory:
                         </label>
                         <input 
-                            type="text" 
+                            type="number" 
                             id="inventory-analyst" 
                             class="input-field p-2 text-sm"
                             placeholder="Enter units"
+                            inputmode="decimal"
+                            pattern="[0-9]*"
                             data-method="2"
-                        >
+                        >   
                     </div>
                     
                     <!-- Minimum Production Buffer -->
@@ -269,11 +287,13 @@
                             <i class="fas fa-shield-alt mr-1"></i>Min Production Buffer (%):
                         </label>
                         <input 
-                            type="text" 
+                            type="number" 
                             id="min-buffer-analyst" 
                             class="input-field p-2 text-sm"
                             placeholder="0"
                             value="0"
+                            inputmode="decimal"
+                            pattern="[0-9]*"
                             data-method="2"
                         >
                         <p class="helper-text text-xs">(Leave at 0 for no minimum)</p>

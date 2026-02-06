@@ -3,16 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="BitLife Business Calculator - Professional Production Forecasting & Inventory Management">
-    <meta name="keywords" content="business calculator, production forecast, inventory management, BitLife">
-    <meta name="author" content="Fuji">
-    <meta property="og:title" content="BitLife Business Calculator">
-    <meta property="og:description" content="Professional Production Forecasting Tool">
-    <meta property="og:image" content="https://your-domain.com/preview.png">
-    <meta property="og:url" content="https://your-domain.com">
-    <meta name="twitter:card" content="summary_large_image">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1a1a2e">
     <title>BitLife Business Calculator</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,38 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💼</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💼</text></svg>">
-
-    <style>
-        /* Add these keyframe animations */
-        @keyframes confettiFall {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(80vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-        
-        /* Add focus animation class for inputs */
-        .focus-animation {
-            animation: inputPulse 1s ease;
-        }
-        
-        @keyframes inputPulse {
-            0%, 100% { 
-                transform: scale(1); 
-                box-shadow: 0 0 0 rgba(212, 175, 55, 0);
-            }
-            50% { 
-                transform: scale(1.01); 
-                box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-            }
-        }
-    </style>
 </head>
 <body class="min-h-screen bitlife-bg">
     <!-- Decorative header bar -->
@@ -91,7 +49,7 @@
                             id="production-last-year" 
                             class="input-field p-2 text-sm"
                             placeholder="Enter units"
-                            inputmode="decimal"
+                            inputmode="numeric"
                             pattern="[0-9]*"
                             data-method="1"
                         >
@@ -107,17 +65,43 @@
                             id="sales" 
                             class="input-field p-2 text-sm"
                             placeholder="Enter units"
-                            inputmode="decimal"
+                            inputmode="numeric"
                             pattern="[0-9]*"
                             data-method="1"
                         >
                     </div>
                     
-                    <!-- Forecast Percentage -->
+                    <!-- Forecast Percentage with Toggle -->
                     <div class="input-group">
                         <label class="input-label text-sm">
-                            <i class="fas fa-chart-bar mr-1"></i>Forecast Percentage (%):
+                            <i class="fas fa-chart-bar mr-1"></i>Forecast Percentage:
                         </label>
+                        
+                        <!-- Toggle Container -->
+                        <div class="flex items-center mb-2">
+                            <span class="text-xs text-gray-400 mr-3">Type:</span>
+                            <div class="flex bg-gray-800 rounded-lg p-1">
+                                <button 
+                                    type="button"
+                                    id="forecast-increase-btn"
+                                    class="toggle-btn active px-3 py-1 rounded-md text-xs font-medium"
+                                    data-type="forecast"
+                                    data-direction="increase"
+                                >
+                                    <i class="fas fa-arrow-up mr-1"></i>Increase
+                                </button>
+                                <button 
+                                    type="button"
+                                    id="forecast-decrease-btn"
+                                    class="toggle-btn px-3 py-1 rounded-md text-xs font-medium ml-1"
+                                    data-type="forecast"
+                                    data-direction="decrease"
+                                >
+                                    <i class="fas fa-arrow-down mr-1"></i>Decrease
+                                </button>
+                            </div>
+                        </div>
+                        
                         <input 
                             type="text" 
                             id="forecast" 
@@ -138,26 +122,53 @@
                             id="inventory" 
                             class="input-field p-2 text-sm"
                             placeholder="Enter units"
-                            inputmode="decimal"
+                            inputmode="numeric"
                             pattern="[0-9]*"
                             data-method="1"
                         >
                     </div>
                     
-                    <!-- Minimum Production Buffer -->
+                    <!-- Minimum Production Buffer with Toggle -->
                     <div class="input-group">
                         <label class="input-label text-sm">
-                            <i class="fas fa-shield-alt mr-1"></i>Min Production Buffer (%):
+                            <i class="fas fa-shield-alt mr-1"></i>Min Production Buffer:
                         </label>
+                        
+                        <!-- Toggle Container -->
+                        <div class="flex items-center mb-2">
+                            <span class="text-xs text-gray-400 mr-3">Type:</span>
+                            <div class="flex bg-gray-800 rounded-lg p-1">
+                                <button 
+                                    type="button"
+                                    id="buffer-increase-btn"
+                                    class="toggle-btn active px-3 py-1 rounded-md text-xs font-medium"
+                                    data-type="buffer"
+                                    data-direction="increase"
+                                >
+                                    <i class="fas fa-plus mr-1"></i>Add Buffer
+                                </button>
+                                <button 
+                                    type="button"
+                                    id="buffer-decrease-btn"
+                                    class="toggle-btn px-3 py-1 rounded-md text-xs font-medium ml-1"
+                                    data-type="buffer"
+                                    data-direction="decrease"
+                                >
+                                    <i class="fas fa-minus mr-1"></i>Reduce Buffer
+                                </button>
+                            </div>
+                        </div>
+                        
                         <input 
-                            type="text" 
+                            type="number" 
                             id="min-buffer" 
                             class="input-field p-2 text-sm"
                             placeholder="0"
                             value="0"
                             inputmode="decimal"
-                            pattern="[0-9]*"
                             data-method="1"
+                            min="0"
+                            step="0.1"
                         >
                         <p class="helper-text text-xs">(Leave at 0 for no minimum)</p>
                     </div>
@@ -226,7 +237,7 @@
                             id="production-analyst-last-year" 
                             class="input-field p-2 text-sm"
                             placeholder="Enter units"
-                            inputmode="decimal"
+                            inputmode="numeric"
                             pattern="[0-9]*"
                             data-method="2"
                         >
@@ -242,7 +253,7 @@
                             id="sales-analyst" 
                             class="input-field p-2 text-sm"
                             placeholder="Enter units"
-                            inputmode="decimal"
+                            inputmode="numeric"
                             pattern="[0-9]*"
                             data-method="2"
                         >
@@ -258,7 +269,7 @@
                             id="analyst-forecast" 
                             class="input-field p-2 text-sm"
                             placeholder="Enter units"
-                            inputmode="decimal"
+                            inputmode="numeric"
                             pattern="[0-9]*"
                             data-method="2"
                         >
@@ -274,17 +285,43 @@
                             id="inventory-analyst" 
                             class="input-field p-2 text-sm"
                             placeholder="Enter units"
-                            inputmode="decimal"
+                            inputmode="numeric"
                             pattern="[0-9]*"
                             data-method="2"
-                        >   
+                        >
                     </div>
                     
-                    <!-- Minimum Production Buffer -->
+                    <!-- Minimum Production Buffer with Toggle -->
                     <div class="input-group">
                         <label class="input-label text-sm">
-                            <i class="fas fa-shield-alt mr-1"></i>Min Production Buffer (%):
+                            <i class="fas fa-shield-alt mr-1"></i>Min Production Buffer:
                         </label>
+                        
+                        <!-- Toggle Container -->
+                        <div class="flex items-center mb-2">
+                            <span class="text-xs text-gray-400 mr-3">Type:</span>
+                            <div class="flex bg-gray-800 rounded-lg p-1">
+                                <button 
+                                    type="button"
+                                    id="buffer-analyst-increase-btn"
+                                    class="toggle-btn active px-3 py-1 rounded-md text-xs font-medium"
+                                    data-type="buffer-analyst"
+                                    data-direction="increase"
+                                >
+                                    <i class="fas fa-plus mr-1"></i>Add Buffer
+                                </button>
+                                <button 
+                                    type="button"
+                                    id="buffer-analyst-decrease-btn"
+                                    class="toggle-btn px-3 py-1 rounded-md text-xs font-medium ml-1"
+                                    data-type="buffer-analyst"
+                                    data-direction="decrease"
+                                >
+                                    <i class="fas fa-minus mr-1"></i>Reduce Buffer
+                                </button>
+                            </div>
+                        </div>
+                        
                         <input 
                             type="text" 
                             id="min-buffer-analyst" 
@@ -292,7 +329,6 @@
                             placeholder="0"
                             value="0"
                             inputmode="decimal"
-                            pattern="[0-9]*"
                             data-method="2"
                         >
                         <p class="helper-text text-xs">(Leave at 0 for no minimum)</p>
@@ -344,7 +380,7 @@
         
         <!-- Footer note -->
         <div class="footer-note">
-            <p>Enter values in any field to see real-time calculations.</p>
+            <p>Enter values in any field to see real-time calculations. Use toggles to switch between increase/decrease percentages.</p>
         </div>
     </div>
 

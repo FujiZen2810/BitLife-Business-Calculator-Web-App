@@ -15,6 +15,7 @@ Maintains the original BitLife color palette
     --success-color: #4ade80;
     --info-color: #60a5fa;
     --warning-color: #fbbf24;
+    --danger-color: #f87171;
 }
 
 /* Base styles */
@@ -112,11 +113,62 @@ body.bitlife-bg {
     border-color: var(--accent-color);
 }
 
+/* Hide number input spinners */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 .helper-text {
     color: #6b7280;
     font-size: 0.75rem; /* text-xs */
     margin-top: 0.125rem;
     font-style: italic;
+}
+
+/* Toggle Button Styles */
+.toggle-btn {
+    background-color: transparent;
+    color: var(--text-secondary);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+    text-align: center;
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+.toggle-btn:hover {
+    color: var(--text-primary);
+    background-color: rgba(212, 175, 55, 0.1);
+}
+
+.toggle-btn.active {
+    background-color: var(--accent-color);
+    color: var(--bg-primary);
+    font-weight: bold;
+}
+
+.toggle-btn.active:hover {
+    background-color: var(--accent-hover);
+}
+
+/* Different colors for increase/decrease */
+.toggle-btn[data-direction="increase"].active {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.toggle-btn[data-direction="decrease"].active {
+    background-color: var(--danger-color);
+    color: white;
 }
 
 /* Separator */
@@ -181,6 +233,7 @@ body.bitlife-bg {
     transition: all 0.2s;
     padding: 0.5rem 0.75rem; /* py-2 px-3 */
     font-size: 0.875rem; /* text-sm */
+    cursor: pointer;
 }
 
 .btn-bitlife:hover {
@@ -235,21 +288,10 @@ body.bitlife-bg {
         width: 100%;
         justify-content: space-between;
     }
-}
-
-/* Print styles */
-@media print {
-    .btn-bitlife {
-        display: none;
-    }
     
-    .bitlife-header::after {
-        background-color: #000;
-    }
-    
-    .section-card {
-        border-color: #000;
-        break-inside: avoid;
+    .toggle-btn {
+        padding: 0.5rem;
+        font-size: 0.7rem;
     }
 }
 
@@ -270,9 +312,27 @@ body.bitlife-bg {
     }
 }
 
+/* Better input styling for text inputs with numeric keyboards */
+.input-field[inputmode="numeric"],
+.input-field[inputmode="decimal"] {
+    font-variant-numeric: tabular-nums;
+    font-family: 'Segoe UI', system-ui, monospace;
+}
+
+/* Remove default browser styling for number inputs */
+.input-field[type="text"] {
+    -moz-appearance: textfield;
+}
+
+.input-field[type="text"]::-webkit-outer-spin-button,
+.input-field[type="text"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 /* ===== ENHANCED ANIMATIONS ===== */
 
-/* Shimmer header animation */
+/* Shimmering header animation */
 .bitlife-header::after {
     content: '';
     position: absolute;
@@ -296,27 +356,39 @@ body.bitlife-bg {
     100% { background-position: 200% 0; }
 }
 
-/* Title icon animation */
-.bitlife-title i {
+/* Title animation with money bag */
+.bitlife-title {
+    position: relative;
     display: inline-block;
-    animation: gentlePulse 2s ease-in-out infinite;
 }
 
-@keyframes gentlePulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+.bitlife-title::after {
+    content: '💰';
+    position: absolute;
+    right: -40px;
+    top: 0;
+    animation: moneyFloat 3s ease-in-out infinite;
 }
 
-/* Section card hover effects */
+@keyframes moneyFloat {
+    0%, 100% { 
+        transform: translateY(0) rotate(0deg); 
+    }
+    50% { 
+        transform: translateY(-10px) rotate(10deg); 
+    }
+}
+
+/* Section card hover animations */
 .section-card {
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
 }
 
 .section-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(212, 175, 55, 0.2);
     border-color: var(--accent-hover);
 }
 
@@ -335,54 +407,120 @@ body.bitlife-bg {
     left: 100%;
 }
 
-/* Section underline animation */
+/* Section underline pulse animation */
 .section-underline {
-    animation: growWidth 1s ease-out;
-    transform-origin: left;
+    animation: pulseWidth 2s ease-in-out infinite;
 }
 
-@keyframes growWidth {
-    from { width: 0; opacity: 0; }
-    to { width: 3rem; opacity: 1; }
+@keyframes pulseWidth {
+    0%, 100% { width: 3rem; opacity: 1; }
+    50% { width: 4rem; opacity: 0.7; }
 }
 
-/* Input field animations */
+/* Input field focus animations */
 .input-field {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.input-field:focus {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
-    border-color: var(--accent-hover);
-}
-
-/* Number result animations */
-.demand-value, .production-value {
-    position: relative;
     transition: all 0.3s ease;
 }
 
-.demand-value.animating, .production-value.animating {
-    animation: numberPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+.input-field:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+    border-color: var(--accent-hover);
+}
+
+/* Toggle button animations */
+.toggle-btn {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.toggle-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.toggle-btn:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Result number animations */
+.demand-value, .production-value {
+    position: relative;
+    display: inline-block;
+}
+
+.demand-value.changing, .production-value.changing {
+    animation: numberPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 @keyframes numberPop {
     0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
+    50% { transform: scale(1.3); }
     100% { transform: scale(1); }
 }
 
-/* Status message animation */
+/* Glow effects for results */
+.demand-value.glow {
+    animation: blueGlow 1.5s ease-in-out;
+}
+
+.production-value.glow {
+    animation: greenGlow 1.5s ease-in-out;
+}
+
+@keyframes blueGlow {
+    0%, 100% { 
+        text-shadow: 0 0 5px rgba(96, 165, 250, 0.3);
+    }
+    50% { 
+        text-shadow: 0 0 20px rgba(96, 165, 250, 0.8),
+                     0 0 30px rgba(96, 165, 250, 0.6);
+    }
+}
+
+@keyframes greenGlow {
+    0%, 100% { 
+        text-shadow: 0 0 5px rgba(74, 222, 128, 0.3);
+    }
+    50% { 
+        text-shadow: 0 0 20px rgba(74, 222, 128, 0.8),
+                     0 0 30px rgba(74, 222, 128, 0.6);
+    }
+}
+
+/* Status message animations */
 .status-message {
     opacity: 0;
-    transform: translateY(-5px);
-    transition: all 0.4s ease;
+    transform: translateY(-10px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .status-message.show {
     opacity: 1;
     transform: translateY(0);
+}
+
+.status-message.success {
+    animation: successPulse 2s ease-in-out infinite;
+}
+
+@keyframes successPulse {
+    0%, 100% { 
+        text-shadow: 0 0 5px rgba(74, 222, 128, 0.3);
+    }
+    50% { 
+        text-shadow: 0 0 15px rgba(74, 222, 128, 0.8);
+    }
 }
 
 /* Button animations */
@@ -399,15 +537,15 @@ body.bitlife-bg {
     left: 50%;
     width: 5px;
     height: 5px;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.5);
     opacity: 0;
     border-radius: 100%;
     transform: scale(1, 1) translate(-50%);
     transform-origin: 50% 50%;
 }
 
-.btn-bitlife:active::after {
-    animation: ripple 0.6s ease-out;
+.btn-bitlife:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
 }
 
 @keyframes ripple {
@@ -425,32 +563,13 @@ body.bitlife-bg {
     }
 }
 
-/* Success glow effect */
-.success-glow {
-    animation: successGlow 1.5s ease-in-out;
+.btn-bitlife:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
 }
 
-@keyframes successGlow {
-    0%, 100% { 
-        box-shadow: 0 0 5px rgba(74, 222, 128, 0);
-    }
-    50% { 
-        box-shadow: 0 0 20px rgba(74, 222, 128, 0.4);
-    }
-}
-
-/* Info glow effect */
-.info-glow {
-    animation: infoGlow 1.5s ease-in-out;
-}
-
-@keyframes infoGlow {
-    0%, 100% { 
-        box-shadow: 0 0 5px rgba(96, 165, 250, 0);
-    }
-    50% { 
-        box-shadow: 0 0 20px rgba(96, 165, 250, 0.4);
-    }
+.btn-bitlife:active {
+    transform: translateY(1px);
 }
 
 /* Page load animations */
@@ -465,7 +584,7 @@ body.bitlife-bg {
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
     }
     to {
         opacity: 1;
@@ -473,7 +592,7 @@ body.bitlife-bg {
     }
 }
 
-/* Stagger animations for inputs */
+/* Staggered animations for inputs */
 .input-group:nth-child(1) { animation-delay: 0.1s; }
 .input-group:nth-child(2) { animation-delay: 0.2s; }
 .input-group:nth-child(3) { animation-delay: 0.3s; }
@@ -494,20 +613,68 @@ body.bitlife-bg::before {
         radial-gradient(circle at 50% 50%, rgba(74, 222, 128, 0.03) 0%, transparent 30%);
     z-index: -1;
     pointer-events: none;
+    animation: backgroundMove 20s ease-in-out infinite alternate;
 }
 
-/* Hide number input spinners for cleaner look */
-input[type="number"] {
-    -moz-appearance: textfield;
+@keyframes backgroundMove {
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    100% {
+        transform: translateX(50px) translateY(50px);
+    }
 }
 
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+/* Success celebration animation */
+.success-celebration {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s;
 }
 
-/* Better styling for number inputs */
-.input-field[type="number"] {
-    font-variant-numeric: tabular-nums;
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    opacity: 0;
+}
+
+/* Responsive animation adjustments */
+@media (max-width: 768px) {
+    .bitlife-title::after {
+        right: -30px;
+        font-size: 0.8em;
+    }
+    
+    .section-card:hover {
+        transform: translateY(-3px);
+    }
+    
+    @keyframes numberPop {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+    }
+}
+
+/* Input focus animation */
+@keyframes inputPulse {
+    0%, 100% { 
+        transform: scale(1); 
+        box-shadow: 0 0 0 rgba(212, 175, 55, 0);
+    }
+    50% { 
+        transform: scale(1.01); 
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+    }
+}
+
+.focus-animation {
+    animation: inputPulse 1s ease;
 }

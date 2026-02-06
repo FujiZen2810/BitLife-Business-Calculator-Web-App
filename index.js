@@ -1,5 +1,5 @@
 /**
- * BitLife Business Calculator - With Enhanced Animations
+ * BitLife Business Calculator - With Fixed Input Handling
  */
 
 // DOM elements for Method 1
@@ -29,15 +29,11 @@ class AnimationManager {
     static animateNumber(element, oldValue, newValue) {
         if (oldValue === newValue) return;
         
-        // Add animation class
         element.classList.add('animating');
-        
-        // Remove animation class after animation completes
         setTimeout(() => {
             element.classList.remove('animating');
         }, 400);
         
-        // Add success/info glow based on element type
         if (element.classList.contains('demand-value')) {
             element.classList.add('info-glow');
             setTimeout(() => element.classList.remove('info-glow'), 1500);
@@ -67,7 +63,6 @@ class AnimationManager {
     }
     
     static createConfetti() {
-        // Create subtle confetti effect on success
         const colors = ['#d4af37', '#60a5fa', '#4ade80'];
         
         for (let i = 0; i < 8; i++) {
@@ -84,28 +79,19 @@ class AnimationManager {
                 confetti.style.borderRadius = '50%';
                 confetti.style.opacity = '0.8';
                 
-                // Animation
                 const animationName = `confetti-${Date.now()}-${i}`;
                 const style = document.createElement('style');
                 style.textContent = `
                     @keyframes ${animationName} {
-                        0% {
-                            transform: translateY(0) rotate(0deg);
-                            opacity: 1;
-                        }
-                        100% {
-                            transform: translateY(80vh) rotate(${Math.random() * 360}deg);
-                            opacity: 0;
-                        }
+                        0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+                        100% { transform: translateY(80vh) rotate(${Math.random() * 360}deg); opacity: 0; }
                     }
                 `;
                 document.head.appendChild(style);
                 
                 confetti.style.animation = `${animationName} ${Math.random() * 2 + 1.5}s ease-out forwards`;
-                
                 document.body.appendChild(confetti);
                 
-                // Cleanup
                 setTimeout(() => {
                     if (confetti.parentNode) confetti.remove();
                     if (style.parentNode) style.remove();
@@ -115,7 +101,7 @@ class AnimationManager {
     }
 }
 
-// Utility functions
+// Utility functions - FIXED VERSION
 class CalculatorUtils {
     /**
      * Format number with commas
@@ -126,35 +112,65 @@ class CalculatorUtils {
     }
 
     /**
-     * Parse input value, remove commas
+     * Parse input value - FIXED for negative numbers
      */
     static parseInputValue(value) {
         if (!value || value.trim() === '') return 0;
-        // Remove commas and parse as float
+        
+        // Remove commas if present
         const cleanValue = value.replace(/,/g, '');
+        
+        // Parse as float (allows negative numbers and decimals)
         const parsed = parseFloat(cleanValue);
+        
+        // Return 0 if NaN, otherwise the parsed value
         return isNaN(parsed) ? 0 : parsed;
     }
 
     /**
-     * Format input field with commas as user types
+     * Format input field with commas as user types - FIXED
+     * This handles both positive and negative numbers with commas
      */
     static formatInput(input) {
         const method = input.getAttribute('data-method');
+        let value = input.value;
         
-        // For number inputs, we need to handle the value differently
-        const rawValue = input.value;
+        // Store cursor position
+        const cursorPosition = input.selectionStart;
         
-        // Remove any commas for calculation
-        const cleanValue = rawValue.replace(/,/g, '');
+        // Check if we should allow negative (only for forecast and buffer fields)
+        const allowNegative = input.id.includes('forecast') || input.id.includes('buffer');
         
-        // Only format if it's a valid number and not empty
-        if (cleanValue && !isNaN(cleanValue) && cleanValue !== '') {
-            // For display, add commas
-            const numValue = parseFloat(cleanValue);
-            if (!isNaN(numValue)) {
+        // Remove all commas to work with raw number
+        const rawValue = value.replace(/,/g, '');
+        
+        // Check if valid number (including negative if allowed)
+        if (rawValue === '' || rawValue === '-') {
+            // Allow empty or just minus sign for negative numbers
+            if (method === '1') calculateMethod1();
+            if (method === '2') calculateMethod2();
+            return;
+        }
+        
+        // Check if it's a valid number
+        const numValue = parseFloat(rawValue);
+        
+        if (!isNaN(numValue)) {
+            // Check if negative is allowed
+            if (numValue < 0 && !allowNegative) {
+                // Don't allow negative for this field
+                input.value = Math.abs(numValue).toLocaleString('en-US');
+            } else {
+                // Format with commas
                 input.value = numValue.toLocaleString('en-US');
             }
+            
+            // Try to restore cursor position (approximate)
+            setTimeout(() => {
+                const newLength = input.value.length;
+                const newPosition = Math.min(cursorPosition + (input.value.length - value.length), newLength);
+                input.setSelectionRange(newPosition, newPosition);
+            }, 0);
         }
         
         // Animate the input focus
@@ -165,6 +181,23 @@ class CalculatorUtils {
             calculateMethod1();
         } else if (method === '2') {
             calculateMethod2();
+        }
+    }
+
+    /**
+     * Validate input on blur - ensure proper formatting
+     */
+    static validateInput(input) {
+        let value = input.value.replace(/,/g, '');
+        
+        if (value === '' || value === '-') {
+            input.value = value === '-' ? '-' : '';
+            return;
+        }
+        
+        const numValue = parseFloat(value);
+        if (!isNaN(numValue)) {
+            input.value = numValue.toLocaleString('en-US');
         }
     }
 }
@@ -207,6 +240,10 @@ class BitLifeCalculator {
             let statusMsg = '';
             if (minBufferPct > 0 && requiredProduction === minProduction && requiredProduction > 0) {
                 statusMsg = `🛡️ Minimum buffer applied (${minBufferPct}% of demand)`;
+            } else if (minBufferPct < 0) {
+                statusMsg = `⚠️ Negative buffer (${minBufferPct}%) - careful!`;
+            } else if (forecastPct < 0) {
+                statusMsg = `📉 Negative forecast (${forecastPct}%) - decreasing production`;
             } else if (requiredProduction === 0) {
                 statusMsg = '✓ Inventory sufficient. No production needed.';
                 if (sales > 0 || productionLastYear > 0) {
@@ -230,7 +267,6 @@ class BitLifeCalculator {
             AnimationManager.animateStatus(statusMessage, statusMsg);
             
         } catch (error) {
-            // Invalid input: clear results
             demandValue.textContent = '--';
             productionValue.textContent = '--';
             statusMessage.textContent = '';
@@ -274,6 +310,8 @@ class BitLifeCalculator {
             let statusMsg = '';
             if (minBufferPct > 0 && requiredProduction === minProduction && requiredProduction > 0) {
                 statusMsg = `🛡️ Minimum buffer applied (${minBufferPct}% of demand)`;
+            } else if (minBufferPct < 0) {
+                statusMsg = `⚠️ Negative buffer (${minBufferPct}%) - careful!`;
             } else if (requiredProduction === 0) {
                 statusMsg = '✓ Inventory sufficient. No production needed.';
                 if (sales > 0 || productionLastYear > 0) {
@@ -297,7 +335,6 @@ class BitLifeCalculator {
             AnimationManager.animateStatus(statusAnalystMessage, statusMsg);
             
         } catch (error) {
-            // Invalid input: clear results
             totalDemandValue.textContent = '--';
             productionAnalystValue.textContent = '--';
             statusAnalystMessage.textContent = '';
@@ -305,56 +342,38 @@ class BitLifeCalculator {
         }
     }
 
-    /**
-     * Reset Method 1 inputs and results
-     */
     static resetMethod1() {
-        // Animate the reset
         AnimationManager.animateNumber(demandValue, CalculatorUtils.parseInputValue(demandValue.textContent), 0);
         AnimationManager.animateNumber(productionValue, CalculatorUtils.parseInputValue(productionValue.textContent), 0);
         
-        // Clear inputs
         salesInput.value = '';
         productionLastYearInput.value = '';
         forecastInput.value = '';
         inventoryInput.value = '';
         minBufferInput.value = '0';
         
-        // Animate status message removal
         AnimationManager.animateStatus(statusMessage, '');
-        
-        // Create confetti effect
         AnimationManager.createConfetti();
         
-        // Add small delay before setting final values
         setTimeout(() => {
             demandValue.textContent = '0';
             productionValue.textContent = '0';
         }, 300);
     }
 
-    /**
-     * Reset Method 2 inputs and results
-     */
     static resetMethod2() {
-        // Animate the reset
         AnimationManager.animateNumber(totalDemandValue, CalculatorUtils.parseInputValue(totalDemandValue.textContent), 0);
         AnimationManager.animateNumber(productionAnalystValue, CalculatorUtils.parseInputValue(productionAnalystValue.textContent), 0);
         
-        // Clear inputs
         salesAnalystInput.value = '';
         productionAnalystLastYearInput.value = '';
         analystForecastInput.value = '';
         inventoryAnalystInput.value = '';
         minBufferAnalystInput.value = '0';
         
-        // Animate status message removal
         AnimationManager.animateStatus(statusAnalystMessage, '');
-        
-        // Create confetti effect
         AnimationManager.createConfetti();
         
-        // Add small delay before setting final values
         setTimeout(() => {
             totalDemandValue.textContent = '0';
             productionAnalystValue.textContent = '0';
@@ -364,16 +383,15 @@ class BitLifeCalculator {
 
 // Initialize everything
 function initializeApp() {
-    console.log('BitLife Calculator Initializing...');
-    
     // Set up event listeners
     setupEventListeners();
     
-    // Add initial animations to elements
-    addInitialAnimations();
-    
     // Load example data after a delay
-    setTimeout(loadExampleData, 800);
+    setTimeout(() => {
+        // Calculate both methods
+        BitLifeCalculator.calculateMethod1();
+        BitLifeCalculator.calculateMethod2();
+    }, 800);
 }
 
 function setupEventListeners() {
@@ -383,7 +401,13 @@ function setupEventListeners() {
     forecastInput.addEventListener('input', () => CalculatorUtils.formatInput(forecastInput));
     inventoryInput.addEventListener('input', () => CalculatorUtils.formatInput(inventoryInput));
     minBufferInput.addEventListener('input', () => CalculatorUtils.formatInput(minBufferInput));
-    resetMethod1Btn.addEventListener('click', () => BitLifeCalculator.resetMethod1());
+    
+    // Add blur validation
+    productionLastYearInput.addEventListener('blur', () => CalculatorUtils.validateInput(productionLastYearInput));
+    salesInput.addEventListener('blur', () => CalculatorUtils.validateInput(salesInput));
+    forecastInput.addEventListener('blur', () => CalculatorUtils.validateInput(forecastInput));
+    inventoryInput.addEventListener('blur', () => CalculatorUtils.validateInput(inventoryInput));
+    minBufferInput.addEventListener('blur', () => CalculatorUtils.validateInput(minBufferInput));
     
     // Method 2 inputs
     productionAnalystLastYearInput.addEventListener('input', () => CalculatorUtils.formatInput(productionAnalystLastYearInput));
@@ -391,43 +415,17 @@ function setupEventListeners() {
     analystForecastInput.addEventListener('input', () => CalculatorUtils.formatInput(analystForecastInput));
     inventoryAnalystInput.addEventListener('input', () => CalculatorUtils.formatInput(inventoryAnalystInput));
     minBufferAnalystInput.addEventListener('input', () => CalculatorUtils.formatInput(minBufferAnalystInput));
+    
+    // Add blur validation for method 2
+    productionAnalystLastYearInput.addEventListener('blur', () => CalculatorUtils.validateInput(productionAnalystLastYearInput));
+    salesAnalystInput.addEventListener('blur', () => CalculatorUtils.validateInput(salesAnalystInput));
+    analystForecastInput.addEventListener('blur', () => CalculatorUtils.validateInput(analystForecastInput));
+    inventoryAnalystInput.addEventListener('blur', () => CalculatorUtils.validateInput(inventoryAnalystInput));
+    minBufferAnalystInput.addEventListener('blur', () => CalculatorUtils.validateInput(minBufferAnalystInput));
+    
+    // Reset buttons
+    resetMethod1Btn.addEventListener('click', () => BitLifeCalculator.resetMethod1());
     resetMethod2Btn.addEventListener('click', () => BitLifeCalculator.resetMethod2());
-    
-    // Add focus animations to all inputs
-    const allInputs = document.querySelectorAll('input[type="text"]');
-    allInputs.forEach(input => {
-        input.addEventListener('focus', () => {
-            AnimationManager.animateInputFocus(input);
-        });
-    });
-}
-
-function addInitialAnimations() {
-    // Add staggered animation classes to input groups
-    const inputGroups = document.querySelectorAll('.input-group');
-    inputGroups.forEach((group, index) => {
-        group.classList.add('fade-in-up');
-        group.style.animationDelay = `${0.1 + (index * 0.1)}s`;
-    });
-    
-    // Add animation to section cards
-    const sectionCards = document.querySelectorAll('.section-card');
-    sectionCards.forEach(card => {
-        card.classList.add('fade-in-up');
-    });
-    
-    // Add animation to title
-    const title = document.querySelector('.bitlife-title');
-    const subtitle = document.querySelector('.bitlife-subtitle');
-    title.classList.add('fade-in');
-    subtitle.classList.add('fade-in');
-}
-
-function loadExampleData() {
-    console.log('Loading example data...');
-    // Calculate both methods
-    BitLifeCalculator.calculateMethod1();
-    BitLifeCalculator.calculateMethod2();
 }
 
 // Make functions globally available
@@ -436,53 +434,5 @@ window.calculateMethod2 = BitLifeCalculator.calculateMethod2;
 window.resetMethod1 = BitLifeCalculator.resetMethod1;
 window.resetMethod2 = BitLifeCalculator.resetMethod2;
 
-// Start the app when DOM is loaded
+// Start the app
 document.addEventListener('DOMContentLoaded', initializeApp);
-
-// Global error handling
-window.addEventListener('error', function(e) {
-    console.error('Application error:', e.error);
-});
-
-// Offline support
-window.addEventListener('offline', function() {
-    console.log('You are offline');
-    showToast('⚠️ You are offline - calculations saved locally');
-});
-
-window.addEventListener('online', function() {
-    console.log('You are back online');
-    showToast('✅ Back online');
-});
-
-// Toast notification function
-function showToast(message) {
-    const toast = document.createElement('div');
-    toast.textContent = message;
-    toast.style.position = 'fixed';
-    toast.style.bottom = '20px';
-    toast.style.right = '20px';
-    toast.style.backgroundColor = 'var(--bg-secondary)';
-    toast.style.color = 'var(--text-primary)';
-    toast.style.padding = '10px 20px';
-    toast.style.borderRadius = '5px';
-    toast.style.border = '1px solid var(--accent-color)';
-    toast.style.zIndex = '10000';
-    toast.style.opacity = '0';
-    toast.style.transition = 'opacity 0.3s';
-    
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.style.opacity = '1';
-    }, 10);
-    
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => {
-            if(toast.parentNode) {
-                toast.remove();
-            }
-        }, 300);
-    }, 3000);
-}

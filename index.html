@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body class="min-h-screen bitlife-bg">
     <!-- Decorative header bar -->
@@ -200,6 +203,17 @@
                             <span class="unit-label text-xs">units</span>
                         </div>
                     </div>
+
+                    <!-- Smart Production -->
+                    <div class="result-row">
+                        <div class="result-label text-sm">
+                            <i class="fas fa-bullseye mr-1"></i>Smart Production:
+                        </div>
+                        <div class="result-value">
+                            <span id="min-production-value" class="min-production-value text-xl no-select">0</span>
+                            <span class="unit-label text-xs">units</span>
+                        </div>
+                    </div>
                     
                     <!-- Status Message -->
                     <div id="status-message" class="status-message text-xs min-h-4"></div>
@@ -358,6 +372,17 @@
                         </div>
                         <div class="result-value">
                             <span id="production-analyst-value" class="production-value text-xl no-select">0</span>
+                            <span class="unit-label text-xs">units</span>
+                        </div>
+                    </div>
+
+                    <!-- Smart Production -->
+                    <div class="result-row">
+                        <div class="result-label text-sm">
+                            <i class="fas fa-bullseye mr-1"></i>Smart Production:
+                        </div>
+                        <div class="result-value">
+                            <span id="min-production-analyst-value" class="min-production-value text-xl no-select">0</span>
                             <span class="unit-label text-xs">units</span>
                         </div>
                     </div>

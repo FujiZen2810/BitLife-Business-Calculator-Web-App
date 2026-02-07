@@ -4,6 +4,8 @@ Maintains the original BitLife color palette
 */
 
 /* CSS Variables for BitLife theme */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&display=swap');
+
 :root {
     --bg-primary: #1a1a2e;
     --bg-secondary: #16213e;
@@ -178,41 +180,64 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 /* Results section */
+/* For the result rows - ensure consistent layout */
 .result-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 1rem; /* space-y-4 equivalent */
+    padding-right: 10px; /* Add some right padding for better spacing */
 }
 
+/* Ensure all result labels have consistent width */
 .result-label {
     color: var(--accent-color);
     font-weight: bold;
     font-size: 0.875rem; /* text-sm */
+    min-width: 140px; /* Fixed width for labels */
 }
+
+/* Align all result values with monospaced font and equal width */
 .result-value {
     display: flex;
     align-items: center;
+    min-width: 140px; /* Fixed width container */
+    justify-content: flex-end;
+    font-family: 'Segoe UI', 'Roboto Mono', 'Consolas', monospace;
 }
 
-.demand-value {
-    color: var(--info-color);
+/* Ensure all value spans have consistent width and alignment */
+.demand-value, .production-value, .min-production-value {
     font-weight: bold;
     font-size: 1.5rem; /* text-2xl */
     margin-right: 0.5rem; /* mr-2 */
+    text-align: right;
+    min-width: 100px; /* Fixed width for numbers */
+    display: inline-block;
+    font-variant-numeric: tabular-nums;
+    font-family: 'Roboto Mono', 'Consolas', 'Courier New', monospace;
+}
+
+/* Specific colors */
+.demand-value {
+    color: var(--info-color);
 }
 
 .production-value {
     color: var(--success-color);
-    font-weight: bold;
-    font-size: 1.5rem; /* text-2xl */
-    margin-right: 0.5rem; /* mr-2 */
 }
 
+.min-production-value {
+    color: var(--warning-color);
+}
+
+/* For unit labels */
 .unit-label {
     color: var(--text-secondary);
     font-size: 0.75rem; /* text-xs */
     font-style: italic;
+    min-width: 40px; /* Fixed width for units */
+    text-align: left;
 }
 
 /* Status messages */
@@ -269,29 +294,31 @@ input[type="number"]::-webkit-inner-spin-button {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .section-card {
-        margin-bottom: 1.5rem;
-    }
-    
-    .demand-value,
-    .production-value {
-        font-size: 1.25rem; /* text-xl */
-    }
-    
     .result-row {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
     }
     
+    .result-label {
+        min-width: auto;
+        width: 100%;
+    }
+    
     .result-value {
+        min-width: auto;
         width: 100%;
         justify-content: space-between;
     }
     
-    .toggle-btn {
-        padding: 0.5rem;
-        font-size: 0.7rem;
+    .demand-value, .production-value, .min-production-value {
+        min-width: 80px;
+        font-size: 1.25rem; /* text-xl */
+        text-align: right;
+    }
+    
+    .unit-label {
+        min-width: 35px;
     }
 }
 
@@ -677,4 +704,321 @@ body.bitlife-bg::before {
 
 .focus-animation {
     animation: inputPulse 1s ease;
+}
+
+/* ===== SMART PRODUCTION STYLING (Matches existing design) ===== */
+
+/* Smart Production row - matches result-row styling */
+.result-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem; /* matches space-y-4 equivalent */
+}
+
+/* Smart Production label - matches result-label styling */
+.result-item .label {
+    color: var(--accent-color);
+    font-weight: bold;
+    font-size: 0.875rem; /* text-sm - matches result-label */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.result-item .label i {
+    font-size: 0.875rem; /* Match icon size */
+}
+
+/* Smart Production value container - matches result-value styling */
+.result-item .value {
+    display: flex;
+    align-items: center;
+}
+
+/* Smart Production value - matches production-value styling */
+.min-production-value {
+    color: var(--warning-color); /* Using warning color for smart production */
+    font-weight: bold;
+    font-size: 1.5rem; /* text-2xl - matches production-value */
+    margin-right: 0.5rem; /* mr-2 - matches production-value */
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    min-width: 120px;
+    text-align: center;
+}
+
+/* Smart Production number animation - matches production-value */
+.min-production-value.changing {
+    animation: numberPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Smart Production glow effect - matches other values */
+.min-production-value.glow {
+    animation: smartGlow 1.5s ease-in-out;
+}
+
+@keyframes smartGlow {
+    0%, 100% { 
+        text-shadow: 0 0 5px rgba(251, 191, 36, 0.3);
+    }
+    50% { 
+        text-shadow: 0 0 20px rgba(251, 191, 36, 0.8),
+                     0 0 30px rgba(251, 191, 36, 0.6);
+    }
+}
+
+/* Buffer Level Background Colors (kept for visual feedback) */
+.min-production-value.high-buffer {
+    background: linear-gradient(135deg, 
+        rgba(220, 38, 38, 0.1) 0%, 
+        rgba(220, 38, 38, 0.05) 100%);
+    border-left: 4px solid #dc2626;
+}
+
+.min-production-value.medium-buffer {
+    background: linear-gradient(135deg, 
+        rgba(245, 158, 11, 0.1) 0%, 
+        rgba(245, 158, 11, 0.05) 100%);
+    border-left: 4px solid #f59e0b;
+}
+
+.min-production-value.low-buffer {
+    background: linear-gradient(135deg, 
+        rgba(34, 197, 94, 0.1) 0%, 
+        rgba(34, 197, 94, 0.05) 100%);
+    border-left: 4px solid #22c55e;
+}
+
+.min-production-value.minimal-buffer {
+    background: linear-gradient(135deg, 
+        rgba(156, 163, 175, 0.1) 0%, 
+        rgba(156, 163, 175, 0.05) 100%);
+    border-left: 4px solid #9ca3af;
+}
+
+/* New value animation */
+.min-production-value.new-value {
+    animation: sparkle 0.6s ease-out;
+}
+
+@keyframes sparkle {
+    0% { 
+        transform: scale(0.95); 
+        opacity: 0.8; 
+    }
+    50% { 
+        transform: scale(1.05); 
+        opacity: 1; 
+    }
+    100% { 
+        transform: scale(1); 
+        opacity: 1; 
+    }
+}
+
+/* Tooltip styling - keep this */
+.min-production-label {
+    cursor: help;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.min-production-label:hover {
+    background: rgba(212, 175, 55, 0.1);
+}
+
+.min-production-label:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    white-space: pre-line;
+    z-index: 1000;
+    min-width: 250px;
+    max-width: 300px;
+    text-align: left;
+    margin-bottom: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--accent-color);
+    line-height: 1.5;
+    animation: fadeIn 0.2s ease-out;
+}
+
+/* Scenario Display - keep this */
+.scenario-display {
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 8px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--accent-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.scenario-badge {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 6px;
+    margin: 8px 0;
+    background: rgba(255, 255, 255, 0.05);
+    transition: transform 0.2s ease, background 0.2s ease;
+    border-left: 4px solid;
+}
+
+.scenario-badge:hover {
+    transform: translateX(5px);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Scenario specific colors - keep this */
+.scenario-badge[style*="normal"] {
+    border-left-color: var(--info-color);
+    background: rgba(96, 165, 250, 0.1);
+}
+
+.scenario-badge[style*="volatile"] {
+    border-left-color: var(--danger-color);
+    background: rgba(248, 113, 113, 0.1);
+}
+
+.scenario-badge[style*="seasonal"] {
+    border-left-color: var(--warning-color);
+    background: rgba(251, 191, 36, 0.1);
+}
+
+.scenario-badge[style*="luxury"] {
+    border-left-color: #9b59b6;
+    background: rgba(155, 89, 182, 0.1);
+}
+
+.scenario-badge[style*="essential"] {
+    border-left-color: var(--success-color);
+    background: rgba(74, 222, 128, 0.1);
+}
+
+.scenario-icon {
+    font-size: 24px;
+    margin-right: 16px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.scenario-badge[style*="normal"] .scenario-icon {
+    background: rgba(96, 165, 250, 0.2);
+    color: var(--info-color);
+}
+
+.scenario-badge[style*="volatile"] .scenario-icon {
+    background: rgba(248, 113, 113, 0.2);
+    color: var(--danger-color);
+}
+
+.scenario-badge[style*="seasonal"] .scenario-icon {
+    background: rgba(251, 191, 36, 0.2);
+    color: var(--warning-color);
+}
+
+.scenario-badge[style*="luxury"] .scenario-icon {
+    background: rgba(155, 89, 182, 0.2);
+    color: #9b59b6;
+}
+
+.scenario-badge[style*="essential"] .scenario-icon {
+    background: rgba(74, 222, 128, 0.2);
+    color: var(--success-color);
+}
+
+.scenario-info {
+    flex: 1;
+}
+
+.scenario-info strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 1em;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.scenario-info small {
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.85em;
+    line-height: 1.4;
+}
+
+.scenario-multiplier {
+    font-size: 0.85em;
+    color: var(--accent-color);
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .result-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .result-item .value {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .min-production-value {
+        font-size: 1.25rem; /* text-xl - matches responsive size */
+        min-width: 100%;
+        text-align: left;
+    }
+    
+    .min-production-label:hover::after {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90vw;
+        max-width: 90vw;
+        min-width: unset;
+        z-index: 9999;
+    }
+    
+    .scenario-badge {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .scenario-icon {
+        margin-right: 0;
+    }
 }

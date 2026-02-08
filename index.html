@@ -15,6 +15,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body class="min-h-screen bitlife-bg">
+    <!-- Theme Toggle -->
+    <div class="theme-toggle-container">
+        <div class="theme-label">
+            <i class="fas fa-moon"></i> Dark
+        </div>
+        <label class="theme-toggle">
+            <input type="checkbox" id="theme-toggle" aria-label="Toggle dark/light mode">
+            <span class="toggle-slider"></span>
+        </label>
+        <div class="theme-label">
+            Light <i class="fas fa-sun"></i>
+        </div>
+    </div>
+    
     <!-- Decorative header bar -->
     <div class="bitlife-header"></div>
     
@@ -80,14 +94,14 @@
                             <i class="fas fa-chart-bar mr-1"></i>Forecast Percentage:
                         </label>
                         
-                        <!-- Toggle Container -->
-                        <div class="flex items-center mb-2">
-                            <span class="text-xs text-gray-400 mr-3">Type:</span>
-                            <div class="flex bg-gray-800 rounded-lg p-1">
+                        <!-- Toggle Container - UPDATED -->
+                        <div class="toggle-container">
+                            <span class="toggle-type-label">Type:</span>
+                            <div class="toggle-group">
                                 <button 
                                     type="button"
                                     id="forecast-increase-btn"
-                                    class="toggle-btn active px-3 py-1 rounded-md text-xs font-medium"
+                                    class="toggle-btn active"
                                     data-type="forecast"
                                     data-direction="increase"
                                 >
@@ -96,7 +110,7 @@
                                 <button 
                                     type="button"
                                     id="forecast-decrease-btn"
-                                    class="toggle-btn px-3 py-1 rounded-md text-xs font-medium ml-1"
+                                    class="toggle-btn"
                                     data-type="forecast"
                                     data-direction="decrease"
                                 >
@@ -137,14 +151,14 @@
                             <i class="fas fa-shield-alt mr-1"></i>Min Production Buffer:
                         </label>
                         
-                        <!-- Toggle Container -->
-                        <div class="flex items-center mb-2">
-                            <span class="text-xs text-gray-400 mr-3">Type:</span>
-                            <div class="flex bg-gray-800 rounded-lg p-1">
+                        <!-- Toggle Container - UPDATED -->
+                        <div class="toggle-container">
+                            <span class="toggle-type-label">Type:</span>
+                            <div class="toggle-group">
                                 <button 
                                     type="button"
                                     id="buffer-increase-btn"
-                                    class="toggle-btn active px-3 py-1 rounded-md text-xs font-medium"
+                                    class="toggle-btn active"
                                     data-type="buffer"
                                     data-direction="increase"
                                 >
@@ -153,7 +167,7 @@
                                 <button 
                                     type="button"
                                     id="buffer-decrease-btn"
-                                    class="toggle-btn px-3 py-1 rounded-md text-xs font-medium ml-1"
+                                    class="toggle-btn"
                                     data-type="buffer"
                                     data-direction="decrease"
                                 >
@@ -311,14 +325,14 @@
                             <i class="fas fa-shield-alt mr-1"></i>Min Production Buffer:
                         </label>
                         
-                        <!-- Toggle Container -->
-                        <div class="flex items-center mb-2">
-                            <span class="text-xs text-gray-400 mr-3">Type:</span>
-                            <div class="flex bg-gray-800 rounded-lg p-1">
+                        <!-- Toggle Container - UPDATED -->
+                        <div class="toggle-container">
+                            <span class="toggle-type-label">Type:</span>
+                            <div class="toggle-group">
                                 <button 
                                     type="button"
                                     id="buffer-analyst-increase-btn"
-                                    class="toggle-btn active px-3 py-1 rounded-md text-xs font-medium"
+                                    class="toggle-btn active"
                                     data-type="buffer-analyst"
                                     data-direction="increase"
                                 >
@@ -327,7 +341,7 @@
                                 <button 
                                     type="button"
                                     id="buffer-analyst-decrease-btn"
-                                    class="toggle-btn px-3 py-1 rounded-md text-xs font-medium ml-1"
+                                    class="toggle-btn"
                                     data-type="buffer-analyst"
                                     data-direction="decrease"
                                 >

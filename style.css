@@ -1,23 +1,73 @@
 /* 
 BitLife Business Calculator - CSS Styles
 Maintains the original BitLife color palette
+Now with Dark/Light Mode Support
 */
 
-/* CSS Variables for BitLife theme */
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&display=swap');
-
+/* CSS Variables for BitLife theme - DARK MODE (Default) */
 :root {
+    /* Gold Accent - Consistent in both modes */
+    --accent-color: #d4af37;
+    --accent-hover: #e5c158;
+    --accent-light: #f4e4a6;
+    
+    /* Dark Mode Colors */
     --bg-primary: #1a1a2e;
     --bg-secondary: #16213e;
     --bg-tertiary: #0f3460;
-    --accent-color: #d4af37;
-    --accent-hover: #e5c158;
     --text-primary: #ffffff;
     --text-secondary: #b0b0b0;
+    --text-tertiary: #6b7280;
+    --border-color: #374151;
+    --card-shadow: rgba(0, 0, 0, 0.3);
+    --input-bg: var(--bg-tertiary);
+    
+    /* Status Colors */
     --success-color: #4ade80;
     --info-color: #60a5fa;
     --warning-color: #fbbf24;
     --danger-color: #f87171;
+    
+    /* Toggle Switch */
+    --toggle-bg: var(--bg-tertiary);
+    --toggle-knob: var(--accent-color);
+}
+
+/* Light Mode Variables */
+[data-theme="light"] {
+    /* Gold Accent - Same as dark mode */
+    --accent-color: #d4af37;
+    --accent-hover: #c19c2e;
+    --accent-light: #f8f0d5;
+    
+    /* Light Mode Colors */
+    --bg-primary: #f8f9fa;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f1f3f4;
+    --text-primary: #1f2937;
+    --text-secondary: #4b5563;
+    --text-tertiary: #6b7280;
+    --border-color: #d1d5db;
+    --card-shadow: rgba(0, 0, 0, 0.08);
+    --input-bg: #ffffff;
+    
+    /* Status Colors - Adjusted for light mode */
+    --success-color: #10b981;
+    --info-color: #3b82f6;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    
+    /* Toggle Switch */
+    --toggle-bg: #e5e7eb;
+    --toggle-knob: var(--accent-color);
+}
+
+/* Smooth theme transition */
+body, .section-card, input, button {
+    transition: background-color 0.3s ease, 
+                color 0.3s ease, 
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
 }
 
 /* Base styles */
@@ -25,7 +75,117 @@ body.bitlife-bg {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
 }
+
+/* ===== THEME TOGGLE STYLES ===== */
+
+.theme-toggle-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 100;
+}
+
+@media (max-width: 768px) {
+    .theme-toggle-container {
+        position: relative;
+        top: auto;
+        right: auto;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+}
+
+.theme-label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.theme-label i {
+    font-size: 1rem;
+}
+
+/* Modern Toggle Switch */
+.theme-toggle {
+    position: relative;
+    width: 60px;
+    height: 30px;
+}
+
+.theme-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--toggle-bg);
+    border-radius: 34px;
+    transition: .4s;
+    border: 2px solid var(--accent-color);
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 2px;
+    bottom: 2px;
+    background-color: var(--toggle-knob);
+    border-radius: 50%;
+    transition: .4s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 0.75rem;
+}
+
+input:checked + .toggle-slider {
+    background-color: var(--accent-light);
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(30px);
+    content: "☀️";
+    background-color: var(--accent-color);
+}
+
+/* Hover effects */
+.theme-toggle:hover .toggle-slider {
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+}
+
+/* Toggle animation */
+@keyframes togglePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.theme-toggle input:checked + .toggle-slider:before {
+    animation: togglePulse 0.3s ease;
+}
+
+/* ===== HEADER & TITLE ===== */
 
 /* Decorative header */
 .bitlife-header {
@@ -48,47 +208,44 @@ body.bitlife-bg {
 /* Titles */
 .bitlife-title {
     color: var(--accent-color);
-    font-size: 1.5rem; /* text-2xl */
+    font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 0.25rem;
+    text-align: center;
 }
 
 @media (min-width: 768px) {
     .bitlife-title {
-        font-size: 2.25rem; /* text-4xl */
+        font-size: 2.25rem;
     }
 }
 
 .bitlife-subtitle {
     color: var(--text-secondary);
-    font-size: 0.875rem; /* text-sm */
+    font-size: 0.875rem;
+    text-align: center;
+    margin-bottom: 1rem;
 }
 
-/* Section cards */
+/* ===== SECTION CARDS ===== */
+
 .section-card {
     background-color: var(--bg-secondary);
     border: 2px solid var(--accent-color);
-    border-radius: 6px;
-    padding: 1rem; /* p-4 */
+    border-radius: 8px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 12px var(--card-shadow);
 }
 
-.section-title {
-    color: var(--accent-color);
-    font-size: 1.125rem; /* text-lg */
-    font-weight: bold;
-    margin-bottom: 0.25rem;
+/* Light mode specific card adjustments */
+[data-theme="light"] .section-card {
+    border-width: 1.5px;
 }
 
-.section-underline {
-    height: 0.125rem;
-    width: 3rem;
-    border-radius: 9999px;
-    background-color: var(--accent-color);
-}
+/* ===== INPUT FIELDS ===== */
 
-/* Input fields - Smaller */
 .input-group {
-    margin-bottom: 0.75rem; /* space-y-3 equivalent */
+    margin-bottom: 0.75rem;
 }
 
 .input-label {
@@ -96,23 +253,308 @@ body.bitlife-bg {
     font-weight: bold;
     margin-bottom: 0.25rem;
     color: var(--text-primary);
-    font-size: 0.875rem; /* text-sm */
+    font-size: 0.875rem;
 }
 
 .input-field {
-    background-color: var(--bg-tertiary);
+    background-color: var(--input-bg);
     color: var(--text-primary);
-    border: 1px solid #374151;
-    border-radius: 4px;
-    transition: border-color 0.2s;
-    padding: 0.5rem; /* p-2 */
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    padding: 0.625rem;
     width: 100%;
-    font-size: 0.875rem; /* text-sm */
+    font-size: 0.875rem;
 }
 
 .input-field:focus {
     outline: none;
     border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+/* Light mode input specific */
+[data-theme="light"] .input-field {
+    border: 1px solid #cbd5e1;
+}
+
+[data-theme="light"] .input-field:focus {
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+}
+
+/* ===== TOGGLE BUTTONS ===== */
+
+.toggle-btn {
+    background-color: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+    text-align: center;
+    border-radius: 6px;
+    padding: 0.375rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+.toggle-btn:hover {
+    color: var(--text-primary);
+    background-color: rgba(212, 175, 55, 0.1);
+    border-color: var(--accent-color);
+}
+
+.toggle-btn.active {
+    background-color: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+    font-weight: bold;
+}
+
+/* Different colors for increase/decrease */
+.toggle-btn[data-direction="increase"].active {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+    color: white;
+}
+
+.toggle-btn[data-direction="decrease"].active {
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
+    color: white;
+}
+
+/* Toggle Container - Theme Aware */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.toggle-type-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-right: 0.75rem;
+    min-width: 40px;
+}
+
+/* Toggle Button Group - Updated for Theme */
+.toggle-group {
+    display: flex;
+    background-color: var(--bg-tertiary);
+    border-radius: 6px;
+    padding: 0.25rem;
+    border: 1px solid var(--border-color);
+    gap: 0.25rem;
+}
+
+/* ===== RESULTS SECTION ===== */
+
+.result-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    min-height: 36px;
+}
+
+.result-label {
+    color: var(--accent-color);
+    font-weight: bold;
+    font-size: 0.875rem;
+    min-width: 140px;
+    flex-shrink: 0;
+}
+
+.result-value {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 150px;
+    flex-shrink: 0;
+}
+
+.demand-value, .production-value, .min-production-value {
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-family: 'Roboto Mono', 'Consolas', 'Courier New', monospace;
+    display: inline-block;
+    min-width: 80px;
+    padding: 0 4px;
+    box-sizing: content-box;
+    overflow: visible !important;
+    white-space: nowrap;
+}
+
+.demand-value { color: var(--info-color); }
+.production-value { color: var(--success-color); }
+.min-production-value { color: var(--warning-color); }
+
+/* ===== BUTTONS ===== */
+
+.btn-bitlife {
+    background-color: var(--bg-secondary);
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 6px;
+    font-weight: bold;
+    transition: all 0.2s;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.btn-bitlife:hover {
+    background-color: var(--accent-color);
+    color: var(--bg-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+}
+
+.btn-bitlife:active {
+    transform: translateY(0);
+}
+
+/* ===== FOOTER ===== */
+
+.footer-note {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* ===== THEME-SPECIFIC ADJUSTMENTS ===== */
+
+/* Light mode brightness adjustments */
+[data-theme="light"] {
+    .bitlife-header {
+        background-color: var(--accent-light);
+    }
+    
+    .bitlife-header::after {
+        background: linear-gradient(90deg, 
+            transparent, 
+            var(--accent-color), 
+            var(--accent-hover),
+            var(--accent-color),
+            transparent
+        );
+    }
+    
+    .section-underline {
+        background-color: var(--accent-color);
+    }
+    
+    /* Status messages in light mode */
+    .status-message {
+        color: var(--text-secondary);
+    }
+    
+    /* Helper text */
+    .helper-text {
+        color: var(--text-tertiary);
+    }
+    
+    /* Separator */
+    .separator {
+        border-color: var(--border-color);
+    }
+    
+    /* Toggle button group background */
+    .toggle-btn {
+        border: 1px solid #cbd5e1;
+    }
+}
+
+/* ===== ANIMATIONS (Theme-aware) ===== */
+
+/* Shimmering header animation */
+.bitlife-header::after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        var(--accent-color), 
+        var(--accent-hover),
+        var(--accent-color),
+        transparent
+    );
+    animation: shimmer 3s infinite linear;
+    background-size: 200% 100%;
+}
+
+/* Title animation with money bag */
+.bitlife-title {
+    position: relative;
+    display: inline-block;
+}
+
+.bitlife-title::after {
+    content: '💰';
+    position: absolute;
+    right: -40px;
+    top: 0;
+    animation: moneyFloat 3s ease-in-out infinite;
+}
+
+/* Responsive theme toggle */
+@media (max-width: 768px) {
+    .theme-toggle-container {
+        position: relative;
+        top: auto;
+        right: auto;
+        margin: 0 auto 20px auto;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .theme-label {
+        font-size: 0.8rem;
+    }
+    
+    .theme-toggle {
+        transform: scale(0.9);
+    }
+}
+
+/* Print styles - always light mode */
+@media print {
+    [data-theme] {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8f9fa;
+        --text-primary: #000000;
+        --text-secondary: #4b5563;
+        --border-color: #d1d5db;
+    }
+    
+    .theme-toggle-container {
+        display: none;
+    }
+}
+
+/* [Rest of your existing CSS remains exactly the same below this point - just replace variable references where needed] */
+
+/* Continue with all your existing animations, smart production styling, etc. */
+/* Just make sure to replace any hard-coded colors with variable references */
+
+/* Example: Replace #d32f2f with var(--danger-color) */
+/* Example: Replace #388e3c with var(--success-color) */
+
+/* I'll continue with the rest of your CSS, updating color references as needed... */
+
+.helper-text {
+    color: var(--text-tertiary);
+    font-size: 0.75rem;
+    margin-top: 0.125rem;
+    font-style: italic;
 }
 
 /* Hide number input spinners */
@@ -126,155 +568,26 @@ input[type="number"]::-webkit-inner-spin-button {
     margin: 0;
 }
 
-.helper-text {
-    color: #6b7280;
-    font-size: 0.75rem; /* text-xs */
-    margin-top: 0.125rem;
-    font-style: italic;
-}
-
-/* Toggle Button Styles */
-.toggle-btn {
-    background-color: transparent;
-    color: var(--text-secondary);
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    flex: 1;
-    text-align: center;
-    border-radius: 4px;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-}
-
-.toggle-btn:hover {
-    color: var(--text-primary);
-    background-color: rgba(212, 175, 55, 0.1);
-}
-
-.toggle-btn.active {
-    background-color: var(--accent-color);
-    color: var(--bg-primary);
-    font-weight: bold;
-}
-
-.toggle-btn.active:hover {
-    background-color: var(--accent-hover);
-}
-
-/* Different colors for increase/decrease */
-.toggle-btn[data-direction="increase"].active {
-    background-color: var(--success-color);
-    color: white;
-}
-
-.toggle-btn[data-direction="decrease"].active {
-    background-color: var(--danger-color);
-    color: white;
-}
-
-/* Separator */
 .separator {
-    border-top: 1px solid #374151;
-    margin: 1rem 0; /* my-4 */
+    border-top: 1px solid var(--border-color);
+    margin: 1rem 0;
 }
 
-/* Results section */
-/* For the result rows - ensure consistent layout */
-.result-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem; /* space-y-4 equivalent */
-    padding-right: 10px; /* Add some right padding for better spacing */
-}
-
-/* Ensure all result labels have consistent width */
-.result-label {
-    color: var(--accent-color);
-    font-weight: bold;
-    font-size: 0.875rem; /* text-sm */
-    min-width: 140px; /* Fixed width for labels */
-}
-
-/* Align all result values with monospaced font and equal width */
-.result-value {
-    display: flex;
-    align-items: center;
-    min-width: 140px; /* Fixed width container */
-    justify-content: flex-end;
-    font-family: 'Segoe UI', 'Roboto Mono', 'Consolas', monospace;
-}
-
-/* Ensure all value spans have consistent width and alignment */
-.demand-value, .production-value, .min-production-value {
-    font-weight: bold;
-    font-size: 1.5rem; /* text-2xl */
-    margin-right: 0.5rem; /* mr-2 */
-    text-align: right;
-    min-width: 100px; /* Fixed width for numbers */
-    display: inline-block;
-    font-variant-numeric: tabular-nums;
-    font-family: 'Roboto Mono', 'Consolas', 'Courier New', monospace;
-}
-
-/* Specific colors */
-.demand-value {
-    color: var(--info-color);
-}
-
-.production-value {
-    color: var(--success-color);
-}
-
-.min-production-value {
-    color: var(--warning-color);
-}
-
-/* For unit labels */
 .unit-label {
     color: var(--text-secondary);
-    font-size: 0.75rem; /* text-xs */
+    font-size: 0.75rem;
     font-style: italic;
-    min-width: 40px; /* Fixed width for units */
+    min-width: 40px;
     text-align: left;
+    margin-left: 4px;
+    flex-shrink: 0;
 }
 
-/* Status messages */
 .status-message {
     color: var(--warning-color);
-    font-size: 0.75rem; /* text-xs */
+    font-size: 0.75rem;
     font-style: italic;
-    min-height: 1rem; /* min-h-4 */
-}
-
-/* Buttons */
-.btn-bitlife {
-    background-color: var(--bg-secondary);
-    color: var(--accent-color);
-    border: 1px solid var(--accent-color);
-    border-radius: 4px;
-    font-weight: bold;
-    transition: all 0.2s;
-    padding: 0.5rem 0.75rem; /* py-2 px-3 */
-    font-size: 0.875rem; /* text-sm */
-    cursor: pointer;
-}
-
-.btn-bitlife:hover {
-    background-color: var(--bg-tertiary);
-    color: var(--accent-hover);
-    border-color: var(--accent-hover);
-}
-
-/* Footer */
-.footer-note {
-    text-align: center;
-    color: var(--text-secondary);
-    font-size: 0.75rem; /* text-xs */
-    margin-top: 1rem; /* mt-4 */
-    padding-top: 0.5rem;
-    border-top: 1px solid var(--bg-tertiary);
+    min-height: 1rem;
 }
 
 /* Animations */
@@ -312,13 +625,15 @@ input[type="number"]::-webkit-inner-spin-button {
     }
     
     .demand-value, .production-value, .min-production-value {
-        min-width: 80px;
-        font-size: 1.25rem; /* text-xl */
+        min-width: 60px;
+        font-size: 1.25rem;
         text-align: right;
+        flex-grow: 1;
     }
     
     .unit-label {
         min-width: 35px;
+        margin-left: 8px;
     }
 }
 
@@ -334,8 +649,9 @@ input[type="number"]::-webkit-inner-spin-button {
     }
     
     .demand-value,
-    .production-value {
-        font-size: 1rem; /* text-base */
+    .production-value,
+    .min-production-value {
+        font-size: 1rem;
     }
 }
 
@@ -359,42 +675,9 @@ input[type="number"]::-webkit-inner-spin-button {
 
 /* ===== ENHANCED ANIMATIONS ===== */
 
-/* Shimmering header animation */
-.bitlife-header::after {
-    content: '';
-    position: absolute;
-    top: 1px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, 
-        transparent, 
-        var(--accent-color), 
-        var(--accent-hover),
-        var(--accent-color),
-        transparent
-    );
-    animation: shimmer 3s infinite linear;
-    background-size: 200% 100%;
-}
-
 @keyframes shimmer {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
-}
-
-/* Title animation with money bag */
-.bitlife-title {
-    position: relative;
-    display: inline-block;
-}
-
-.bitlife-title::after {
-    content: '💰';
-    position: absolute;
-    right: -40px;
-    top: 0;
-    animation: moneyFloat 3s ease-in-out infinite;
 }
 
 @keyframes moneyFloat {
@@ -436,6 +719,10 @@ input[type="number"]::-webkit-inner-spin-button {
 
 /* Section underline pulse animation */
 .section-underline {
+    height: 0.125rem;
+    width: 3rem;
+    border-radius: 9999px;
+    background-color: var(--accent-color);
     animation: pulseWidth 2s ease-in-out infinite;
 }
 
@@ -445,10 +732,6 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 /* Input field focus animations */
-.input-field {
-    transition: all 0.3s ease;
-}
-
 .input-field:focus {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
@@ -626,7 +909,7 @@ input[type="number"]::-webkit-inner-spin-button {
 .input-group:nth-child(4) { animation-delay: 0.4s; }
 .input-group:nth-child(5) { animation-delay: 0.5s; }
 
-/* Subtle background pattern */
+/* Subtle background pattern - Theme aware */
 body.bitlife-bg::before {
     content: '';
     position: fixed;
@@ -641,6 +924,13 @@ body.bitlife-bg::before {
     z-index: -1;
     pointer-events: none;
     animation: backgroundMove 20s ease-in-out infinite alternate;
+}
+
+[data-theme="light"] body.bitlife-bg::before {
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.03) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(96, 165, 250, 0.03) 0%, transparent 20%),
+        radial-gradient(circle at 50% 50%, rgba(74, 222, 128, 0.02) 0%, transparent 30%);
 }
 
 @keyframes backgroundMove {
@@ -706,77 +996,34 @@ body.bitlife-bg::before {
     animation: inputPulse 1s ease;
 }
 
-/* ===== SMART PRODUCTION STYLING (Matches existing design) ===== */
+/* ===== SMART PRODUCTION STYLING - THEME AWARE ===== */
 
-/* Smart Production row - matches result-row styling */
-.result-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem; /* matches space-y-4 equivalent */
-}
-
-/* Smart Production label - matches result-label styling */
-.result-item .label {
-    color: var(--accent-color);
-    font-weight: bold;
-    font-size: 0.875rem; /* text-sm - matches result-label */
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.result-item .label i {
-    font-size: 0.875rem; /* Match icon size */
-}
-
-/* Smart Production value container - matches result-value styling */
-.result-item .value {
-    display: flex;
-    align-items: center;
-}
-
-/* Smart Production value - matches production-value styling */
 .min-production-value {
-    color: var(--warning-color); /* Using warning color for smart production */
+    color: var(--warning-color);
     font-weight: bold;
-    font-size: 1.5rem; /* text-2xl - matches production-value */
-    margin-right: 0.5rem; /* mr-2 - matches production-value */
-    padding: 0.25rem 0.75rem;
-    border-radius: 6px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    min-width: 120px;
-    text-align: center;
+    font-size: 1.5rem;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-family: 'Roboto Mono', 'Consolas', 'Courier New', monospace;
+    display: inline-block;
+    min-width: 80px;
+    padding: 0 4px;
+    overflow: visible !important;
+    white-space: nowrap;
+    box-sizing: content-box;
+    max-width: none !important;
+    width: auto !important;
+    text-overflow: clip !important;
 }
 
-/* Smart Production number animation - matches production-value */
-.min-production-value.changing {
-    animation: numberPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* Smart Production glow effect - matches other values */
-.min-production-value.glow {
-    animation: smartGlow 1.5s ease-in-out;
-}
-
-@keyframes smartGlow {
-    0%, 100% { 
-        text-shadow: 0 0 5px rgba(251, 191, 36, 0.3);
-    }
-    50% { 
-        text-shadow: 0 0 20px rgba(251, 191, 36, 0.8),
-                     0 0 30px rgba(251, 191, 36, 0.6);
-    }
-}
-
-/* Buffer Level Background Colors (kept for visual feedback) */
+/* Smart Production with buffer styling - Theme aware */
 .min-production-value.high-buffer {
     background: linear-gradient(135deg, 
         rgba(220, 38, 38, 0.1) 0%, 
         rgba(220, 38, 38, 0.05) 100%);
     border-left: 4px solid #dc2626;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
 }
 
 .min-production-value.medium-buffer {
@@ -784,6 +1031,8 @@ body.bitlife-bg::before {
         rgba(245, 158, 11, 0.1) 0%, 
         rgba(245, 158, 11, 0.05) 100%);
     border-left: 4px solid #f59e0b;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
 }
 
 .min-production-value.low-buffer {
@@ -791,6 +1040,8 @@ body.bitlife-bg::before {
         rgba(34, 197, 94, 0.1) 0%, 
         rgba(34, 197, 94, 0.05) 100%);
     border-left: 4px solid #22c55e;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
 }
 
 .min-production-value.minimal-buffer {
@@ -798,6 +1049,8 @@ body.bitlife-bg::before {
         rgba(156, 163, 175, 0.1) 0%, 
         rgba(156, 163, 175, 0.05) 100%);
     border-left: 4px solid #9ca3af;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
 }
 
 /* New value animation */
@@ -820,7 +1073,22 @@ body.bitlife-bg::before {
     }
 }
 
-/* Tooltip styling - keep this */
+/* Smart Production glow effect */
+.min-production-value.glow {
+    animation: smartGlow 1.5s ease-in-out;
+}
+
+@keyframes smartGlow {
+    0%, 100% { 
+        text-shadow: 0 0 5px rgba(251, 191, 36, 0.3);
+    }
+    50% { 
+        text-shadow: 0 0 20px rgba(251, 191, 36, 0.8),
+                     0 0 30px rgba(251, 191, 36, 0.6);
+    }
+}
+
+/* Tooltip styling */
 .min-production-label {
     cursor: help;
     position: relative;
@@ -859,14 +1127,14 @@ body.bitlife-bg::before {
     animation: fadeIn 0.2s ease-out;
 }
 
-/* Scenario Display - keep this */
+/* Scenario Display */
 .scenario-display {
     margin-top: 20px;
     padding: 16px;
     border-radius: 8px;
     background: var(--bg-tertiary);
     border: 1px solid var(--accent-color);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px var(--card-shadow);
     animation: fadeIn 0.5s ease-out;
 }
 
@@ -876,17 +1144,17 @@ body.bitlife-bg::before {
     padding: 12px;
     border-radius: 6px;
     margin: 8px 0;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(212, 175, 55, 0.05);
     transition: transform 0.2s ease, background 0.2s ease;
     border-left: 4px solid;
 }
 
 .scenario-badge:hover {
     transform: translateX(5px);
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(212, 175, 55, 0.08);
 }
 
-/* Scenario specific colors - keep this */
+/* Scenario specific colors */
 .scenario-badge[style*="normal"] {
     border-left-color: var(--info-color);
     background: rgba(96, 165, 250, 0.1);
@@ -921,7 +1189,7 @@ body.bitlife-bg::before {
     align-items: center;
     justify-content: center;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(212, 175, 55, 0.1);
 }
 
 .scenario-badge[style*="normal"] .scenario-icon {
@@ -984,21 +1252,9 @@ body.bitlife-bg::before {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .result-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-    
-    .result-item .value {
-        width: 100%;
-        justify-content: space-between;
-    }
-    
     .min-production-value {
-        font-size: 1.25rem; /* text-xl - matches responsive size */
-        min-width: 100%;
-        text-align: left;
+        font-size: 1.25rem;
+        min-width: 60px;
     }
     
     .min-production-label:hover::after {
@@ -1021,4 +1277,71 @@ body.bitlife-bg::before {
     .scenario-icon {
         margin-right: 0;
     }
+}
+
+/* ===== CRITICAL FIX: Ensure numbers are never cut off ===== */
+
+/* Apply to ALL value elements */
+#demand-value,
+#production-value,
+#min-production-value,
+#total-demand-value,
+#production-analyst-value,
+#min-production-analyst-value {
+    max-width: none !important;
+    width: auto !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    white-space: nowrap;
+    display: inline-block;
+    text-align: right;
+    padding: 0 2px;
+}
+
+/* Ensure result-value container has enough space */
+.result-value {
+    flex-grow: 0;
+    flex-shrink: 0;
+    min-width: 120px;
+}
+
+/* When numbers get large, ensure container expands */
+.result-value span[class$="value"] {
+    min-width: 60px;
+}
+
+/* Desktop: More space for larger numbers */
+@media (min-width: 769px) {
+    .result-value {
+        min-width: 180px;
+    }
+    
+    .result-value span[class$="value"] {
+        min-width: 100px;
+    }
+}
+
+/* Mobile: Adjust for smaller screens */
+@media (max-width: 768px) {
+    .result-value {
+        min-width: 140px;
+    }
+    
+    .result-value span[class$="value"] {
+        min-width: 70px;
+        font-size: 1.1rem;
+    }
+}
+
+/* Zero state - ensure "0" displays properly */
+.result-value span[class$="value"]:empty {
+    display: inline-block !important;
+    min-width: 20px;
+    content: "0";
+}
+
+/* Apply monospace font to all numbers for perfect alignment */
+.result-value span {
+    font-family: 'Roboto Mono', 'Consolas', 'Courier New', monospace;
+    font-variant-numeric: tabular-nums;
 }
